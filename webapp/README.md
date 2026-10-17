@@ -1,43 +1,64 @@
-# Astro Starter Kit: Minimal
+# Game Library — Webapp
 
-```sh
-npm create astro@latest -- --template minimal
+Astro 7 frontend for the game library: browse games, manage your library
+statuses, and build curated lists. SSR via the Node adapter, styled with
+Tailwind CSS, persisted to JSON files.
+
+> Part of the `gamelib` monorepo — see the [root README](../README.md) for the
+> full architecture and migration plan toward the Spring Boot + Kafka backend
+> in `../server/`.
+
+## Commands
+
+```bash
+npm install        # Install deps (astro + tailwindcss)
+npm run dev        # Dev server at http://localhost:4321
+npm run build      # SSR build (Node adapter, standalone)
+npm run preview    # Preview the build locally
+npm run astro ...  # Astro CLI
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## How it works
 
-## 🚀 Project Structure
+- **Single data layer**: all file I/O goes through `src/lib/db.ts`. Nothing
+  else touches the filesystem directly — the migration seam for the real API.
+- **Persistence**: four JSON files in `data/` (`games.json`, `users.json`,
+  `library.json`, `lists.json`). No relational joins — ID lookup by convention.
+- **Mutations**: server-side Astro Actions in `src/actions/index.ts`
+  (create/update games, set library status, manage lists).
+- **Sessions**: user "login" is session-based selection on `/entrar` with no
+  passwords — deliberate scope decision, not an oversight.
+- **Rendering**: `output: 'server'` with `@astrojs/node` (standalone). Pages
+  using `Astro.session` (`/entrar`, `/usuarios/*`) must never be prerendered.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Pages
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+| Route | What it does |
+|-------|--------------|
+| `/` | Landing page with your library overview |
+| `/juegos`, `/juegos/[id]` | Game catalog, details, status selector |
+| `/juegos/nuevo` | Add a game |
+| `/usuarios`, `/usuarios/[username]` | Users and their libraries |
+| `/listas`, `/listas/[id]` | Curated game lists |
+| `/entrar` | Pick the active user (session) |
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Data model
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- **Game** — slug id (`hollow-knight`), title, platform, year, description
+- **User** — username + display name
+- **Library entry** — `(username, gameId)` → status:
+  `wishlist | backlog | playing | beaten | paused | quit`
+- **List** — user-owned named collection of game ids
 
-Any static assets, like images, can be placed in the `public/` directory.
+Seed data lives in `data/*.json` and is mirrored in the backend's Flyway
+migration (`server/src/main/resources/db/migration/V2__seed_data.sql`) —
+keep both in sync until the backend owns state.
 
-## 🧞 Commands
+## Conventions (learned the hard way)
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Errors in Actions surface in the server console, not the HTML page — don't
+  rely on try/catch rendering feedback to the user.
+- `data/*.json` has no write locking: safe for a single dev process, not for
+  concurrency. That's exactly what the Kafka migration fixes.
+- Agent-specific context lives in [AGENTS.md](./AGENTS.md) — architecture
+  analysis, Kafka primer, and the decision log.
