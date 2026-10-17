@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: game-library-server
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gamelibrary
+    username: gamelibrary
+    password: gamelibrary
+
+  jpa:
+    hibernate:
+      ddl-auto: validate   # Flyway owns the schema; Hibernate only checks it
+    open-in-view: false
+
+  flyway:
+    enabled: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        # The JsonSerializer writes __TypeId__ headers; trust our own package
+        # so the deserializer can resolve event types from them.
+        spring.json.trusted.packages: com.gamelibrary.kafka.event
+        spring.json.use.type.headers: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
