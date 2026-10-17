@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+@theme {
+  --font-pixel: "Press Start 2P", monospace;
+  --font-sans: "Pixelify Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-bg: #1a1733;
+  --color-panel: #221f45;
+  --color-panel-light: #2b2759;
+  --color-border: #4a4580;
+  --color-text: #e8e6ff;
+  --color-text-dim: #a6a1d9;
+
+  --color-accent: #39ff88;
+  --color-accent-2: #ff3fa4;
+  --color-accent-3: #3ad8ff;
+
+  --color-wishlist: #8a8fff;
+  --color-backlog: #c084fc;
+  --color-playing: #3ad8ff;
+  --color-beaten: #39ff88;
+  --color-paused: #facc15;
+  --color-quit: #ff5c5c;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.pixel-panel {
+  background-color: var(--color-panel);
+  border: 4px solid var(--color-border);
+  box-shadow: 6px 6px 0 0 #000;
+  image-rendering: pixelated;
+}
+
+.pixel-btn {
+  font-family: var(--font-pixel);
+  border: 3px solid #000;
+  box-shadow: 4px 4px 0 0 #000;
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+}
+.pixel-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 #000;
+}
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+/* Lift sutil para tarjetas clicables (juego, lista, usuario) */
+.card-hover {
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+}
+
+/* Checker de "textura ausente", para la carátula placeholder de un juego */
+.cover-placeholder {
+  background-image: conic-gradient(
+    var(--color-panel-light) 0deg 90deg,
+    var(--color-panel) 90deg 180deg,
+    var(--color-panel-light) 180deg 270deg,
+    var(--color-panel) 270deg 360deg
+  );
+  background-size: 20px 20px;
+}
+
+/* Se escapa del contenedor centrado (max-w-5xl) para ocupar todo el ancho de la pantalla */
+.full-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+/* Alto del hero = 100% de la pantalla real del móvil (dvh) menos la cabecera (h-16 = 4rem) */
+.hero-viewport {
+  min-height: calc(100vh - 4rem);
+  min-height: calc(100dvh - 4rem);
+}
+
+/* Fondo animado del hero: rejilla pixel + "aurora" de color detrás, en movimiento */
+.hero-bg {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+.hero-bg::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: -1;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(58, 216, 255, 0.28) 0 2px, transparent 2px 24px),
+    repeating-linear-gradient(90deg, rgba(255, 63, 164, 0.22) 0 2px, transparent 2px 24px);
+  animation: hero-grid-drift 16s linear infinite;
+}
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  z-index: -2;
+  background-image:
+    radial-gradient(circle at 25% 30%, rgba(57, 255, 136, 0.45), transparent 55%),
+    radial-gradient(circle at 75% 65%, rgba(255, 63, 164, 0.4), transparent 55%),
+    radial-gradient(circle at 50% 85%, rgba(58, 216, 255, 0.35), transparent 60%);
+  filter: blur(50px);
+  animation: hero-aurora-drift 14s ease-in-out infinite alternate;
+}
+@keyframes hero-grid-drift {
+  from { transform: translate(0, 0); }
+  to { transform: translate(28px, 28px); }
+}
+@keyframes hero-aurora-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6%, -6%) scale(1.15); }
+  100% { transform: translate(-6%, 5%) scale(0.95); }
+}
+
+/* Barrido de luz que cruza el hero de arriba a abajo, en bucle (estilo escáner CRT) */
+.hero-scanline {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.3) 46%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0.3) 54%,
+    transparent
+  );
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  background-position: 0 -60%;
+  animation: hero-scan-sweep 6s linear infinite;
+}
+@keyframes hero-scan-sweep {
+  from { background-position: 0 -60%; }
+  to { background-position: 0 160%; }
+}
+
+/* Sombra fija: mantiene legible el texto del hero sin importar qué haya detrás en ese instante */
+.hero-title {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7), 0 0 4px rgba(0, 0, 0, 0.8);
+}
+.hero-subtitle {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 3px rgba(0, 0, 0, 0.95);
+  animation: hero-subtitle-glow 4s ease-in-out infinite;
+}
+@keyframes hero-subtitle-glow {
+  0%, 100% {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 3px rgba(0, 0, 0, 0.95), 0 0 8px rgba(58, 216, 255, 0.15);
+  }
+  50% {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 3px rgba(0, 0, 0, 0.95), 0 0 16px rgba(58, 216, 255, 0.55);
+  }
+}
+
+/* Respeta la preferencia de movimiento reducido para todas las animaciones de la app */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

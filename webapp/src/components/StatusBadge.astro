@@ -1,0 +1,20 @@
+---
+import type { GameStatus } from '../lib/db';
+
+interface Props {
+  status: GameStatus;
+}
+const { status } = Astro.props;
+
+const COLOR_CLASSES: Record<GameStatus, string> = {
+  wishlist: 'bg-wishlist',
+  backlog: 'bg-backlog',
+  playing: 'bg-playing',
+  beaten: 'bg-beaten',
+  paused: 'bg-paused',
+  quit: 'bg-quit',
+};
+---
+<span class:list={['font-pixel text-[10px] px-2 py-1 text-black inline-block', COLOR_CLASSES[status]]}>
+  {status.toUpperCase()}
+</span>

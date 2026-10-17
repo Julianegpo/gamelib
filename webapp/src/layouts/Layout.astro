@@ -1,0 +1,60 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import PixelButton from '../components/PixelButton.astro';
+
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+const username = Astro.session ? await Astro.session.get('username') : null;
+const isHome = Astro.url.pathname === '/';
+---
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} · GameLib</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+    <ClientRouter />
+  </head>
+  <body class="font-sans min-h-screen flex flex-col">
+    <header class="border-b-4 border-border bg-panel h-16 shrink-0">
+      <nav class="max-w-5xl mx-auto h-full flex items-center justify-between gap-2 px-3 sm:px-4">
+        <div class="flex items-center gap-2 shrink-0">
+          {!isHome && (
+            <PixelButton type="button" id="back-btn" variant="neutral" class="px-2 py-2" aria-label="Volver atrás">
+              ←
+            </PixelButton>
+          )}
+          <a href="/" class="font-pixel text-accent text-xs sm:text-sm">GameLib</a>
+        </div>
+        <div class="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm overflow-x-auto">
+          <a href="/juegos" class="hover:text-accent whitespace-nowrap">Juegos</a>
+          <a href="/listas" class="hover:text-accent whitespace-nowrap">Listas</a>
+          <a href="/usuarios" class="hover:text-accent whitespace-nowrap">Usuarios</a>
+          <a href="/entrar" class="text-text-dim hover:text-accent whitespace-nowrap">
+            {username ? `👤 ${username}` : 'Entrar'}
+          </a>
+        </div>
+      </nav>
+    </header>
+    <main class="max-w-5xl mx-auto w-full flex-1 flex flex-col p-4">
+      <div class="my-auto w-full">
+        <slot />
+      </div>
+    </main>
+  </body>
+
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      document.getElementById('back-btn')?.addEventListener('click', () => history.back());
+    });
+  </script>
+
+</html>

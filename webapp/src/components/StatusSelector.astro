@@ -1,0 +1,23 @@
+---
+import { actions } from 'astro:actions';
+import PixelButton from './PixelButton.astro';
+import type { GameStatus } from '../lib/db';
+
+interface Props {
+  username: string;
+  gameId: string;
+  currentStatus: GameStatus | null;
+}
+const { username, gameId, currentStatus } = Astro.props;
+
+const STATUSES: GameStatus[] = ['wishlist', 'backlog', 'playing', 'beaten', 'paused', 'quit'];
+---
+<form method="POST" action={actions.setStatus} class="flex flex-wrap gap-2">
+  <input type="hidden" name="username" value={username} />
+  <input type="hidden" name="gameId" value={gameId} />
+  {STATUSES.map((s) => (
+    <PixelButton name="status" value={s} variant={currentStatus === s ? 'accent' : 'neutral'}>
+      {s.toUpperCase()}
+    </PixelButton>
+  ))}
+</form>

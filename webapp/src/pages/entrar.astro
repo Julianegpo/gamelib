@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PixelButton from '../components/PixelButton.astro';
+import PixelPanel from '../components/PixelPanel.astro';
+import { getUsers } from '../lib/db';
+
+const users = await getUsers();
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const username = form.get('username')?.toString();
+  if (username) {
+    Astro.session?.set('username', username);
+    return Astro.redirect('/');
+  }
+}
+---
+<Layout title="Elige tu usuario">
+  <PixelPanel class="p-6 max-w-md mx-auto">
+    <h1 class="font-pixel text-lg text-accent mb-6">¿Quién eres?</h1>
+    <form method="POST" class="flex flex-col gap-3">
+      {users.map((u) => (
+        <PixelButton name="username" value={u.username} variant="neutral" class="text-left">
+          {u.displayName}
+        </PixelButton>
+      ))}
+    </form>
+  </PixelPanel>
+</Layout>

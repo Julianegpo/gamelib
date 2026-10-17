@@ -1,0 +1,52 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PixelPanel from '../../components/PixelPanel.astro';
+import PixelButton from '../../components/PixelButton.astro';
+import StatusSelector from '../../components/StatusSelector.astro';
+import CoverPlaceholder from '../../components/CoverPlaceholder.astro';
+import { actions } from 'astro:actions';
+import { getGame, getStatus, getListsForUser } from '../../lib/db';
+
+const { id } = Astro.params;
+const game = await getGame(id!);
+if (!game) return Astro.redirect('/juegos');
+
+const username = Astro.session ? await Astro.session.get('username') : null;
+const currentStatus = username ? await getStatus(username, game.id) : null;
+const myLists = username ? await getListsForUser(username) : [];
+---
+<Layout title={game.title}>
+  <PixelPanel class="p-6 max-w-2xl mx-auto">
+    {game.coverUrl ? (
+      <img src={game.coverUrl} alt={`Carátula de ${game.title}`} class="w-full aspect-video object-cover mb-4 pixel-panel" />
+    ) : (
+      <CoverPlaceholder title={game.title} class="w-full aspect-video mb-4 text-5xl" />
+    )}
+    <h1 class="font-pixel text-accent text-base mb-2">{game.title}</h1>
+    <p class="text-text-dim mb-4">{game.platform} {game.year ? `· ${game.year}` : ''}</p>
+    {game.description && <p class="mb-6">{game.description}</p>}
+
+    {username ? (
+      <>
+        <div class="mb-6">
+          <StatusSelector username={username} gameId={game.id} currentStatus={currentStatus} />
+        </div>
+
+        {myLists.length > 0 && (
+          <form method="POST" action={actions.addGameToList} class="flex gap-2">
+            <input type="hidden" name="gameId" value={game.id} />
+            <select name="listId" class="pixel-panel bg-panel-light px-3 py-2 text-sm">
+              {myLists.map((l) => <option value={l.id}>{l.name}</option>)}
+            </select>
+            <PixelButton type="submit" variant="accent-3">AÑADIR A LISTA</PixelButton>
+          </form>
+        )}
+      </>
+    ) : (
+      <p class="text-text-dim">
+        <a href="/entrar" class="text-accent-3 underline">Elige un usuario</a> para marcar
+        estado o añadir a una lista.
+      </p>
+    )}
+  </PixelPanel>
+</Layout>

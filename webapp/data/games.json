@@ -1,0 +1,16 @@
+[
+  {
+    "id": "hollow-knight",
+    "title": "Hollow Knight",
+    "platform": "PC",
+    "year": 2017,
+    "description": "Metroidvania en 2D con combate preciso y un mundo interconectado enorme."
+  },
+  {
+    "id": "chrono-trigger",
+    "title": "Chrono Trigger",
+    "platform": "SNES",
+    "year": 1995,
+    "description": "JRPG clásico con viajes en el tiempo y múltiples finales."
+  }
+]

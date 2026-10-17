@@ -1,0 +1,15 @@
+---
+interface Props {
+  title: string;
+  class?: string;
+}
+const { title, class: className = '' } = Astro.props;
+const initial = title.trim().charAt(0).toUpperCase() || '?';
+---
+<div
+  class:list={['pixel-panel cover-placeholder flex items-center justify-center overflow-hidden', className]}
+  role="img"
+  aria-label={`Carátula pendiente para ${title}`}
+>
+  <span class="font-pixel text-accent bg-bg/70 px-2 py-1">{initial}</span>
+</div>

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "mis-platinos",
+    "username": "ash",
+    "name": "Mis platinos",
+    "description": "Juegos que me he terminado al 100%.",
+    "gameIds": [
+      "chrono-trigger",
+      "hollow-knight"
+    ]
+  },
+  {
+    "id": "cfeea5c2-4f54-46a3-8337-eb78869b8ec7",
+    "username": "misty",
+    "name": "fisicos",
+    "gameIds": [
+      "hollow-knight"
+    ]
+  }
+]

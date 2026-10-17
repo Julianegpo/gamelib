@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PixelPanel from '../components/PixelPanel.astro';
+import PixelButton from '../components/PixelButton.astro';
+---
+<Layout title="Inicio">
+  <section class="full-bleed hero-viewport hero-bg flex flex-col items-center justify-center text-center px-6">
+    <div class="hero-scanline" aria-hidden="true"></div>
+    <h1 class="hero-title font-pixel text-3xl sm:text-4xl md:text-5xl text-accent mb-6 leading-relaxed">
+      GAME LIBRARY
+    </h1>
+    <p class="hero-subtitle text-text max-w-xl mb-8 text-base sm:text-lg md:text-xl">
+      Tu biblioteca de videojuegos, a tu manera. Guarda lo que juegas,
+      lo que quieres jugar, y lo que ya terminaste.
+    </p>
+    <PixelButton href="/juegos" class="px-6 py-3">VER JUEGOS</PixelButton>
+  </section>
+
+  <section class="grid md:grid-cols-2 gap-6 my-12">
+    <PixelPanel class="p-6">
+      <h2 class="font-pixel text-accent-3 text-sm mb-3">¿QUÉ ES GAMELIB?</h2>
+      <p class="text-text-dim">
+        Una app pensada para gamers que quieren llevar el control de su
+        catálogo: qué tienen en el radar (<em>wishlist</em>), qué está
+        pendiente (<em>backlog</em>), qué están jugando ahora, qué ya
+        terminaron y qué dejaron a medias.
+      </p>
+    </PixelPanel>
+    <PixelPanel class="p-6">
+      <h2 class="font-pixel text-accent-2 text-sm mb-3">LISTAS Y COMUNIDAD</h2>
+      <p class="text-text-dim">
+        Crea tus propias listas temáticas ("Mis platinos", "Para jugar en
+        verano"...) y echa un vistazo a las listas de otros usuarios para
+        descubrir nuevos juegos.
+      </p>
+    </PixelPanel>
+  </section>
+
+  <PixelPanel class="p-6 my-12">
+    <h2 class="font-pixel text-accent text-sm mb-4">¿POR QUÉ USARLA?</h2>
+    <ul class="grid md:grid-cols-3 gap-4 text-text-dim">
+      <li class="pixel-panel bg-panel-light p-4">
+        <strong class="text-accent-3">Simple.</strong>
+        Sin cuentas complicadas, sin anuncios, sin fricción.
+      </li>
+      <li class="pixel-panel bg-panel-light p-4">
+        <strong class="text-accent-2">Organizado.</strong>
+        Seis estados claros para cada juego de tu biblioteca.
+      </li>
+      <li class="pixel-panel bg-panel-light p-4">
+        <strong class="text-beaten">Social.</strong>
+        Explora las listas y biblioteca de otros gamers.
+      </li>
+    </ul>
+  </PixelPanel>
+</Layout>

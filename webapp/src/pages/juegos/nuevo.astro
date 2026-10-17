@@ -1,0 +1,47 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PixelPanel from '../../components/PixelPanel.astro';
+import PixelButton from '../../components/PixelButton.astro';
+import { actions } from 'astro:actions';
+
+const prefillTitle = Astro.url.searchParams.get('title') ?? '';
+const result = Astro.getActionResult(actions.addGame);
+if (result && !result.error) {
+  return Astro.redirect(`/juegos/${result.data.id}`);
+}
+---
+<Layout title="Añadir juego">
+  <PixelPanel class="p-6 max-w-lg mx-auto">
+    <form method="POST" action={actions.addGame} class="flex flex-col gap-4">
+      <h1 class="font-pixel text-accent text-sm mb-2">AÑADIR JUEGO</h1>
+
+      <label class="text-sm text-text-dim">
+        Título
+        <input name="title" value={prefillTitle} placeholder="Nombre del juego..."
+          class="pixel-panel bg-panel-light w-full px-3 py-2 mt-1" />
+      </label>
+
+      <label class="text-sm text-text-dim">
+        Plataforma
+        <input name="platform" placeholder="Ej: NES, PlayStation, Xbox, PC..."
+          class="pixel-panel bg-panel-light w-full px-3 py-2 mt-1" />
+      </label>
+
+      <label class="text-sm text-text-dim">
+        Año de lanzamiento
+        <input name="year" type="date" placeholder="Ej: NES, PlayStation, Xbox, PC..."
+          class="pixel-panel bg-panel-light w-full px-3 py-2 mt-1" />
+      </label>
+
+      <label class="text-sm text-text-dim">
+        Descripción
+        <textarea name="description" rows="3" placeholder="Breve descripción del juego..."
+          class="pixel-panel bg-panel-light w-full px-3 py-2 mt-1"></textarea>
+      </label>
+
+      <PixelButton type="submit" class="self-start">GUARDAR</PixelButton>
+
+      {result?.error && <p class="text-quit">Revisa los datos del formulario.</p>}
+    </form>
+  </PixelPanel>
+</Layout>

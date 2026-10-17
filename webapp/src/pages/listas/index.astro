@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PixelPanel from '../../components/PixelPanel.astro';
+import PixelButton from '../../components/PixelButton.astro';
+import ListCard from '../../components/ListCard.astro';
+import { actions } from 'astro:actions';
+import { getListsForUser } from '../../lib/db';
+
+const username = Astro.session ? await Astro.session.get('username') : null;
+if (!username) return Astro.redirect('/entrar');
+
+const lists = await getListsForUser(username);
+---
+<Layout title="Mis listas">
+  <PixelPanel class="p-4 mb-6">
+    <form method="POST" action={actions.createList} class="flex gap-2">
+      <input type="hidden" name="username" value={username} />
+      <input name="name" required placeholder="Nombre de la lista"
+        class="pixel-panel bg-panel-light flex-1 px-3 py-2 text-sm" />
+      <PixelButton type="submit">CREAR</PixelButton>
+    </form>
+  </PixelPanel>
+
+  <div class="grid md:grid-cols-3 gap-4">
+    {lists.map((l) => <ListCard list={l} />)}
+  </div>
+</Layout>

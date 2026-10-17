@@ -1,0 +1,107 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PixelPanel from '../../components/PixelPanel.astro';
+import PixelButton from '../../components/PixelButton.astro';
+import CoverPlaceholder from '../../components/CoverPlaceholder.astro';
+import { searchGames } from '../../lib/db';
+
+const q = Astro.url.searchParams.get('q') ?? '';
+const games = await searchGames(q);
+---
+<Layout title="Juegos">
+  <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-2 mb-6">
+    <form method="GET" class="flex gap-2 sm:flex-1 sm:min-w-48">
+      <input
+        type="text"
+        name="q"
+        value={q}
+        placeholder="Buscar videojuego..."
+        class="pixel-panel bg-panel-light flex-1 px-3 py-2 text-sm outline-none"
+      />
+      <PixelButton type="submit" variant="accent-3">BUSCAR</PixelButton>
+    </form>
+    <div class="flex gap-1" role="group" aria-label="Vista de la lista de juegos">
+      <PixelButton type="button" id="view-grid-btn" variant="neutral" class="px-3 py-2">▦</PixelButton>
+      <PixelButton type="button" id="view-list-btn" variant="neutral" class="px-3 py-2">☰</PixelButton>
+    </div>
+  </div>
+
+  {games.length === 0 && (
+    <PixelPanel class="p-6 text-center">
+      <p class="text-text-dim mb-4">No hay resultados para "{q}".</p>
+      <PixelButton href={`/juegos/nuevo?title=${encodeURIComponent(q)}`} variant="accent-2">
+        AÑADIR "{q || 'NUEVO JUEGO'}"
+      </PixelButton>
+    </PixelPanel>
+  )}
+
+  <div id="games-container" class="grid md:grid-cols-3 gap-4">
+    {games.map((g) => (
+      <a
+        href={`/juegos/${g.id}`}
+        class="pixel-panel card-hover p-4 hover:bg-panel-light flex items-center gap-4"
+      >
+        {g.coverUrl ? (
+          <img src={g.coverUrl} alt="" class="w-12 h-12 shrink-0 object-cover pixel-panel" />
+        ) : (
+          <CoverPlaceholder title={g.title} class="w-12 h-12 shrink-0 text-lg" />
+        )}
+        <div class="flex items-center justify-between flex-1 gap-4">
+          <h3 class="font-pixel text-xs text-accent">{g.title}</h3>
+          <p class="text-text-dim text-sm whitespace-nowrap">{g.platform} {g.year ? `· ${g.year}` : ''}</p>
+        </div>
+      </a>
+    ))}
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center mt-8">
+    <div class="bg-accent text-black p-5 rounded-lg shadow-[6px_6px_0_0#000]">
+      <h3 class="font-pixel text-sm uppercase mb-3">¿Falta un juego aquí?</h3>
+      <p class="text-base text-black/80 mb-4 leading-relaxed">¡Lo agregamos si lo necesitas, es tu librería!</p>
+      <PixelButton href="/juegos/nuevo" variant="accent-2" class="w-full py-3 px-4">
+        Solicitar añadirlo 👆
+      </PixelButton>
+    </div>
+    {games.length === 0 && (
+      <div class="p-5 bg-panel-light rounded-lg border-2 border-border flex items-center gap-4">
+        <span class="text-xl">📦</span>
+        <div class="flex-1">
+          <h3 class="font-pixel text-xs uppercase mb-2">Nada encontrado en la librería</h3>
+          <p class="text-sm text-text-dim">Prueba buscando con términos diferentes.</p>
+        </div>
+      </div>
+    )}
+  </div>
+</Layout>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const container = document.getElementById('games-container');
+    const gridBtn = document.getElementById('view-grid-btn');
+    const listBtn = document.getElementById('view-list-btn');
+    if (!container || !gridBtn || !listBtn) return;
+
+    const GRID_CLASSES = ['grid', 'md:grid-cols-3', 'gap-4'];
+    const LIST_CLASSES = ['flex', 'flex-col', 'gap-3'];
+    const STORAGE_KEY = 'gamelib-games-view';
+
+    function applyView(view: string) {
+      container.classList.remove(...GRID_CLASSES, ...LIST_CLASSES);
+      container.classList.add(...(view === 'list' ? LIST_CLASSES : GRID_CLASSES));
+      for (const [btn, active] of [
+        [gridBtn, view !== 'list'],
+        [listBtn, view === 'list'],
+      ] as const) {
+        btn.classList.toggle('bg-accent', active);
+        btn.classList.toggle('text-black', active);
+        btn.classList.toggle('bg-panel-light', !active);
+        btn.setAttribute('aria-pressed', String(active));
+      }
+      localStorage.setItem(STORAGE_KEY, view);
+    }
+
+    applyView(localStorage.getItem(STORAGE_KEY) ?? 'grid');
+    gridBtn.addEventListener('click', () => applyView('grid'));
+    listBtn.addEventListener('click', () => applyView('list'));
+  });
+</script>

@@ -1,0 +1,54 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PixelPanel from '../../components/PixelPanel.astro';
+import PixelButton from '../../components/PixelButton.astro';
+import { actions } from 'astro:actions';
+import { getList, getGames } from '../../lib/db';
+
+const { id } = Astro.params;
+const list = await getList(id!);
+if (!list) return Astro.redirect('/listas');
+
+const allGames = await getGames();
+const gamesInList = allGames.filter((g) => list.gameIds.includes(g.id));
+const gamesNotInList = allGames.filter((g) => !list.gameIds.includes(g.id));
+---
+<Layout title={list.name}>
+  <PixelPanel class="p-6 mb-6">
+    <h1 class="font-pixel text-accent-2 text-base mb-2">{list.name}</h1>
+    {list.description && <p class="text-text-dim mb-4">{list.description}</p>}
+
+    <form method="POST" action={actions.deleteList}>
+      <input type="hidden" name="listId" value={list.id} />
+      <PixelButton type="submit" variant="quit">ELIMINAR LISTA</PixelButton>
+    </form>
+  </PixelPanel>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <div>
+      <h2 class="font-pixel text-xs text-accent mb-3">EN LA LISTA</h2>
+      {gamesInList.map((g) => (
+        <form method="POST" action={actions.removeGameFromList}
+          class="pixel-panel p-3 flex justify-between items-center mb-2">
+          <input type="hidden" name="listId" value={list.id} />
+          <input type="hidden" name="gameId" value={g.id} />
+          <a href={`/juegos/${g.id}`} class="hover:text-accent">{g.title}</a>
+          <PixelButton type="submit" variant="quit" class="px-2 py-1">QUITAR</PixelButton>
+        </form>
+      ))}
+    </div>
+
+    <div>
+      <h2 class="font-pixel text-xs text-text-dim mb-3">AÑADIR OTROS JUEGOS</h2>
+      {gamesNotInList.map((g) => (
+        <form method="POST" action={actions.addGameToList}
+          class="pixel-panel p-3 flex justify-between items-center mb-2">
+          <input type="hidden" name="listId" value={list.id} />
+          <input type="hidden" name="gameId" value={g.id} />
+          <span>{g.title}</span>
+          <PixelButton type="submit" class="px-2 py-1">AÑADIR</PixelButton>
+        </form>
+      ))}
+    </div>
+  </div>
+</Layout>

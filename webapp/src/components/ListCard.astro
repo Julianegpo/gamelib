@@ -1,0 +1,12 @@
+---
+import type { GameList } from '../lib/db';
+
+interface Props {
+  list: GameList;
+}
+const { list } = Astro.props;
+---
+<a href={`/listas/${list.id}`} class="pixel-panel card-hover p-4 hover:bg-panel-light block">
+  <h3 class="font-pixel text-xs text-accent-2 mb-2">{list.name}</h3>
+  <p class="text-text-dim text-sm">{list.gameIds.length} juego(s)</p>
+</a>

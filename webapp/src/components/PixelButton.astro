@@ -1,0 +1,47 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'accent' | 'accent-2' | 'accent-3' | 'quit' | 'neutral';
+  type?: 'button' | 'submit';
+  name?: string;
+  value?: string;
+  class?: string;
+  [attr: string]: unknown;
+}
+const {
+  href,
+  variant = 'accent',
+  type = 'submit',
+  name,
+  value,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const VARIANT_CLASSES: Record<string, string> = {
+  accent: 'bg-accent text-black',
+  'accent-2': 'bg-accent-2 text-black',
+  'accent-3': 'bg-accent-3 text-black',
+  quit: 'bg-quit text-black',
+  neutral: 'bg-panel-light text-text',
+};
+---
+{href ? (
+  <a
+    href={href}
+    class:list={['pixel-btn font-pixel text-xs px-4 py-2 inline-block', VARIANT_CLASSES[variant], className]}
+    {...rest}
+  >
+    <slot />
+  </a>
+) : (
+  <button
+    type={type}
+    name={name}
+    value={value}
+    class:list={['pixel-btn font-pixel text-xs px-4 py-2', VARIANT_CLASSES[variant], className]}
+    {...rest}
+  >
+    <slot />
+  </button>
+)}
