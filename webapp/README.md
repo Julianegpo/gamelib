@@ -26,21 +26,21 @@ npm run astro ...  # Astro CLI
   `library.json`, `lists.json`). No relational joins — ID lookup by convention.
 - **Mutations**: server-side Astro Actions in `src/actions/index.ts`
   (create/update games, set library status, manage lists).
-- **Sessions**: user "login" is session-based selection on `/entrar` with no
+- **Sessions**: user "login" is session-based selection on `/login` with no
   passwords — deliberate scope decision, not an oversight.
 - **Rendering**: `output: 'server'` with `@astrojs/node` (standalone). Pages
-  using `Astro.session` (`/entrar`, `/usuarios/*`) must never be prerendered.
+  using `Astro.session` (`/login`, `/users/*`) must never be prerendered.
 
 ## Pages
 
 | Route | What it does |
 |-------|--------------|
 | `/` | Landing page with your library overview |
-| `/juegos`, `/juegos/[id]` | Game catalog, details, status selector |
-| `/juegos/nuevo` | Add a game |
-| `/usuarios`, `/usuarios/[username]` | Users and their libraries |
-| `/listas`, `/listas/[id]` | Curated game lists |
-| `/entrar` | Pick the active user (session) |
+| `/games`, `/games/[id]` | Game catalog, details, status selector |
+| `/games/nuevo` | Add a game |
+| `/users`, `/users/[username]` | Users and their libraries |
+| `/lists`, `/lists/[id]` | Curated game lists |
+| `/login` | Pick the active user (session) |
 
 ## Data model
 

@@ -34,7 +34,7 @@ A mechanically passing diff that fails its feel check is not done.
 | Finding | Why deferred |
 |---|---|
 | Hero subtitle glow animates `text-shadow` (per-frame repaint) | Repaint region is one line of text; no observed jank. Revisit only if hero performance regresses. |
-| Grid ↔ list view toggle teleports (`juegos/index.astro`) | Highest complexity-to-benefit ratio (needs `document.startViewTransition()` + reduced-motion + no-support + initial-apply guards) for an occasional control. First candidate for a later polish pass. |
+| Grid ↔ list view toggle teleports (`games/index.astro`) | Highest complexity-to-benefit ratio (needs `document.startViewTransition()` + reduced-motion + no-support + initial-apply guards) for an occasional control. First candidate for a later polish pass. |
 
 ## Completed audits
 

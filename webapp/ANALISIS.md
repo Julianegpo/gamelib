@@ -38,15 +38,15 @@ src/
 │   └── CoverPlaceholder.astro # Carátula placeholder (checker "textura ausente" + inicial)
 └── pages/
     ├── index.astro          # Landing: hero a pantalla completa + 2 secciones
-    ├── entrar.astro         # Selector de usuario (no es login real)
-    ├── juegos/
+    ├── login.astro          # Selector de usuario (no es login real)
+    ├── games/
     │   ├── index.astro      # Catálogo + búsqueda + toggle cuadrícula/lista
     │   ├── [id].astro       # Detalle + cambio de estado + añadir a lista
     │   └── nuevo.astro      # Alta de juego
-    ├── listas/
+    ├── lists/
     │   ├── index.astro      # Mis listas + crear
     │   └── [id].astro       # Gestionar juegos de una lista
-    └── usuarios/
+    └── users/
         ├── index.astro      # Directorio de usuarios
         └── [username].astro # Perfil público: biblioteca por estado + sus listas
 ```
@@ -113,7 +113,7 @@ En cada iteración: servidor de desarrollo real (`npm run dev`) + un Chrome real
 - Sustituir `src/lib/db.ts` por SQLite (`better-sqlite3`) o una BD remota si se necesita concurrencia real o despliegue serverless.
 - Login real con contraseña.
 - Carátulas de verdad vía una API externa de videojuegos (ya hay el campo `coverUrl` y el fallback a placeholder preparado).
-- Paginación en `/juegos` cuando el catálogo crezca.
+- Paginación en `/games` cuando el catálogo crezca.
 - Primer commit — el repositorio tiene `git init` pero **cero commits**; todo el trabajo descrito aquí sigue sin confirmar en el historial.
 
 ## 11. Cómo ejecutar

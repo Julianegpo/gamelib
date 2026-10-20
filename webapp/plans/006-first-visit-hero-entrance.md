@@ -31,7 +31,7 @@ Current hero markup:
   <p class="hero-subtitle text-text max-w-xl mb-8 text-base sm:text-lg md:text-xl">
     Tu biblioteca de videojuegos, a tu manera. …
   </p>
-  <PixelButton href="/juegos" class="px-6 py-3">VER JUEGOS</PixelButton>
+  <PixelButton href="/games" class="px-6 py-3">VER JUEGOS</PixelButton>
 </section>
 ```
 
@@ -128,7 +128,7 @@ the repo's `gamelib-games-view` key).
 **3. Tag the CTA** — `src/pages/index.astro` line 16:
 
 ```astro
-<PixelButton href="/juegos" class="px-6 py-3 hero-cta">VER JUEGOS</PixelButton>
+<PixelButton href="/games" class="px-6 py-3 hero-cta">VER JUEGOS</PixelButton>
 ```
 
 (`PixelButton` forwards `class` to the element — `src/components/PixelButton.astro:19,49`.)
@@ -137,7 +137,7 @@ the repo's `gamelib-games-view` key).
 
 - All keyframes and animation rules live in `src/styles/global.css`.
 - `sessionStorage` keys are prefixed `gamelib-` (see
-  `src/pages/juegos/index.astro:90`).
+  `src/pages/games/index.astro:90`).
 - Scripts bind via lifecycle events under `<ClientRouter />`; inline +
   `data-astro-rerun` is the documented Astro mechanism for re-running inline
   scripts after navigation.

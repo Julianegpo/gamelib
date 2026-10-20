@@ -23,8 +23,8 @@ speeds:
 ```
 
 The tint comes from Tailwind's `hover:bg-panel-light` on the same elements
-(`src/components/ListCard.astro:9`, `src/pages/juegos/index.astro:43`,
-`src/pages/usuarios/index.astro:10`). `background-color` is not in the
+(`src/components/ListCard.astro:9`, `src/pages/games/index.astro:43`,
+`src/pages/users/index.astro:10`). `background-color` is not in the
 transition's property list, so it applies at frame 0 while the lift is still
 traveling — the color leads and the motion follows.
 
@@ -72,7 +72,7 @@ and land together.
 ## Verification
 
 - **Mechanical**: `npm run build` completes without error.
-- **Feel check**: on `/juegos`, hover a game card and watch at DevTools →
+- **Feel check**: on `/games`, hover a game card and watch at DevTools →
   Animations panel 10% speed:
   - The `bg-panel-light` tint and the −3px lift must begin and complete
     **together** (before: tint was instant, lift trailed it).

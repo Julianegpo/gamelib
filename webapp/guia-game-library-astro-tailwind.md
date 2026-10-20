@@ -358,7 +358,7 @@ Añade `data/` a `.gitignore` si no quieres versionar los datos de prueba (opcio
 
 Astro Sessions ya viene activada con el adaptador Node (usa el filesystem para guardarlas). Solo la usamos para recordar "qué usuario soy".
 
-### Página `src/pages/entrar.astro`
+### Página `src/pages/login.astro`
 
 ```astro
 ---
@@ -425,10 +425,10 @@ const username = Astro.session ? await Astro.session.get('username') : null;
       <nav class="max-w-5xl mx-auto flex items-center justify-between p-4">
         <a href="/" class="font-pixel text-accent text-sm">GameLib</a>
         <div class="flex gap-4 text-sm">
-          <a href="/juegos" class="hover:text-accent">Juegos</a>
-          <a href="/listas" class="hover:text-accent">Mis listas</a>
-          <a href="/usuarios" class="hover:text-accent">Usuarios</a>
-          <a href="/entrar" class="text-text-dim hover:text-accent">
+          <a href="/games" class="hover:text-accent">Juegos</a>
+          <a href="/lists" class="hover:text-accent">Mis listas</a>
+          <a href="/users" class="hover:text-accent">Usuarios</a>
+          <a href="/login" class="text-text-dim hover:text-accent">
             {username ? `👤 ${username}` : 'Entrar'}
           </a>
         </div>
@@ -585,7 +585,7 @@ interface Props {
 }
 const { list } = Astro.props;
 ---
-<a href={`/listas/${list.id}`} class="pixel-panel p-4 hover:bg-panel-light block">
+<a href={`/lists/${list.id}`} class="pixel-panel p-4 hover:bg-panel-light block">
   <h3 class="font-pixel text-xs text-accent-2 mb-2">{list.name}</h3>
   <p class="text-text-dim text-sm">{list.gameIds.length} juego(s)</p>
 </a>
@@ -697,7 +697,7 @@ import PixelButton from '../components/PixelButton.astro';
       Tu biblioteca de videojuegos, a tu manera. Guarda lo que juegas,
       lo que quieres jugar, y lo que ya terminaste.
     </p>
-    <PixelButton href="/juegos" class="px-6 py-3">VER JUEGOS</PixelButton>
+    <PixelButton href="/games" class="px-6 py-3">VER JUEGOS</PixelButton>
   </PixelPanel>
 
   <!-- SECCIÓN 1: QUÉ ES -->
@@ -744,7 +744,7 @@ import PixelButton from '../components/PixelButton.astro';
 
 ---
 
-## 12. Catálogo + búsqueda: `src/pages/juegos/index.astro`
+## 12. Catálogo + búsqueda: `src/pages/games/index.astro`
 
 `GameCard` no existe como componente a propósito — la tarjeta de juego se queda igual que en la primera versión de la guía, inline en la propia página.
 
@@ -773,7 +773,7 @@ const games = await searchGames(q);
   {games.length === 0 && (
     <PixelPanel class="p-6 text-center">
       <p class="text-text-dim mb-4">No hay resultados para "{q}".</p>
-      <PixelButton href={`/juegos/nuevo?title=${encodeURIComponent(q)}`} variant="accent-2">
+      <PixelButton href={`/games/nuevo?title=${encodeURIComponent(q)}`} variant="accent-2">
         AÑADIR "{q || 'NUEVO JUEGO'}"
       </PixelButton>
     </PixelPanel>
@@ -781,20 +781,20 @@ const games = await searchGames(q);
 
   <div class="grid md:grid-cols-3 gap-4">
     {games.map((g) => (
-      <a href={`/juegos/${g.id}`} class="pixel-panel p-4 hover:bg-panel-light block">
+      <a href={`/games/${g.id}`} class="pixel-panel p-4 hover:bg-panel-light block">
         <h3 class="font-pixel text-xs text-accent mb-2">{g.title}</h3>
         <p class="text-text-dim text-sm">{g.platform} {g.year ? `· ${g.year}` : ''}</p>
       </a>
     ))}
   </div>
 
-  <PixelButton href="/juegos/nuevo" class="mt-6">+ AÑADIR JUEGO</PixelButton>
+  <PixelButton href="/games/nuevo" class="mt-6">+ AÑADIR JUEGO</PixelButton>
 </Layout>
 ```
 
 ---
 
-## 13. Añadir videojuego: `src/pages/juegos/nuevo.astro`
+## 13. Añadir videojuego: `src/pages/games/nuevo.astro`
 
 ```astro
 ---
@@ -806,7 +806,7 @@ import { actions } from 'astro:actions';
 const prefillTitle = Astro.url.searchParams.get('title') ?? '';
 const result = Astro.getActionResult(actions.addGame);
 if (result && !result.error) {
-  return Astro.redirect(`/juegos/${result.data.id}`);
+  return Astro.redirect(`/games/${result.data.id}`);
 }
 ---
 <Layout title="Añadir juego">
@@ -850,7 +850,7 @@ Importante: para usar `Astro.getActionResult`, la página **no puede** estar pre
 
 ---
 
-## 14. Detalle de juego + cambio de estado: `src/pages/juegos/[id].astro`
+## 14. Detalle de juego + cambio de estado: `src/pages/games/[id].astro`
 
 ```astro
 ---
@@ -863,7 +863,7 @@ import { getGame, getStatus, getListsForUser } from '../../lib/db';
 
 const { id } = Astro.params;
 const game = await getGame(id!);
-if (!game) return Astro.redirect('/juegos');
+if (!game) return Astro.redirect('/games');
 
 const username = Astro.session ? await Astro.session.get('username') : null;
 const currentStatus = username ? await getStatus(username, game.id) : null;
@@ -893,7 +893,7 @@ const myLists = username ? await getListsForUser(username) : [];
       </>
     ) : (
       <p class="text-text-dim">
-        <a href="/entrar" class="text-accent-3 underline">Elige un usuario</a> para marcar
+        <a href="/login" class="text-accent-3 underline">Elige un usuario</a> para marcar
         estado o añadir a una lista.
       </p>
     )}
@@ -903,9 +903,9 @@ const myLists = username ? await getListsForUser(username) : [];
 
 ---
 
-## 15. Listas: `src/pages/listas/index.astro` y `src/pages/listas/[id].astro`
+## 15. Listas: `src/pages/lists/index.astro` y `src/pages/lists/[id].astro`
 
-**`src/pages/listas/index.astro`** (mis listas + crear):
+**`src/pages/lists/index.astro`** (mis listas + crear):
 
 ```astro
 ---
@@ -917,7 +917,7 @@ import { actions } from 'astro:actions';
 import { getListsForUser } from '../../lib/db';
 
 const username = Astro.session ? await Astro.session.get('username') : null;
-if (!username) return Astro.redirect('/entrar');
+if (!username) return Astro.redirect('/login');
 
 const lists = await getListsForUser(username);
 ---
@@ -937,7 +937,7 @@ const lists = await getListsForUser(username);
 </Layout>
 ```
 
-**`src/pages/listas/[id].astro`** (gestionar juegos dentro de la lista):
+**`src/pages/lists/[id].astro`** (gestionar juegos dentro de la lista):
 
 ```astro
 ---
@@ -949,7 +949,7 @@ import { getList, getGames } from '../../lib/db';
 
 const { id } = Astro.params;
 const list = await getList(id!);
-if (!list) return Astro.redirect('/listas');
+if (!list) return Astro.redirect('/lists');
 
 const allGames = await getGames();
 const gamesInList = allGames.filter((g) => list.gameIds.includes(g.id));
@@ -974,7 +974,7 @@ const gamesNotInList = allGames.filter((g) => !list.gameIds.includes(g.id));
           class="pixel-panel p-3 flex justify-between items-center mb-2">
           <input type="hidden" name="listId" value={list.id} />
           <input type="hidden" name="gameId" value={g.id} />
-          <a href={`/juegos/${g.id}`} class="hover:text-accent">{g.title}</a>
+          <a href={`/games/${g.id}`} class="hover:text-accent">{g.title}</a>
           <PixelButton type="submit" variant="quit" class="px-2 py-1">QUITAR</PixelButton>
         </form>
       ))}
@@ -1000,7 +1000,7 @@ const gamesNotInList = allGames.filter((g) => !list.gameIds.includes(g.id));
 
 ## 16. Ver otros usuarios y sus listas
 
-**`src/pages/usuarios/index.astro`** (sin cambios — las tarjetas de usuario son tan simples que no justifican un componente):
+**`src/pages/users/index.astro`** (sin cambios — las tarjetas de usuario son tan simples que no justifican un componente):
 
 ```astro
 ---
@@ -1012,7 +1012,7 @@ const users = await getUsers();
 <Layout title="Usuarios">
   <div class="grid md:grid-cols-3 gap-4">
     {users.map((u) => (
-      <a href={`/usuarios/${u.username}`} class="pixel-panel p-4 hover:bg-panel-light block">
+      <a href={`/users/${u.username}`} class="pixel-panel p-4 hover:bg-panel-light block">
         <h3 class="font-pixel text-xs text-accent">{u.displayName}</h3>
       </a>
     ))}
@@ -1020,7 +1020,7 @@ const users = await getUsers();
 </Layout>
 ```
 
-**`src/pages/usuarios/[username].astro`** (perfil público: biblioteca por estado + sus listas). Los enlaces a cada juego dentro de cada bloque de estado se mantienen como enlaces simples, igual que antes — no son `GameCard`, así que no cambian.
+**`src/pages/users/[username].astro`** (perfil público: biblioteca por estado + sus listas). Los enlaces a cada juego dentro de cada bloque de estado se mantienen como enlaces simples, igual que antes — no son `GameCard`, así que no cambian.
 
 ```astro
 ---
@@ -1032,7 +1032,7 @@ import { getUser, getLibraryForUser, getListsForUser, getGames } from '../../lib
 
 const { username } = Astro.params;
 const user = await getUser(username!);
-if (!user) return Astro.redirect('/usuarios');
+if (!user) return Astro.redirect('/users');
 
 const [library, lists, games] = await Promise.all([
   getLibraryForUser(username!),
@@ -1058,7 +1058,7 @@ const STATUSES = ['wishlist', 'backlog', 'playing', 'beaten', 'paused', 'quit'] 
           <ul class="text-sm text-text-dim">
             {entries.map((e) => {
               const g = gameById.get(e.gameId);
-              return g && <li><a href={`/juegos/${g.id}`} class="hover:text-accent">{g.title}</a></li>;
+              return g && <li><a href={`/games/${g.id}`} class="hover:text-accent">{g.title}</a></li>;
             })}
           </ul>
         </PixelPanel>
@@ -1082,12 +1082,12 @@ npm run dev
 ```
 
 Flujo de prueba recomendado:
-1. Entra en `/entrar` y elige "Ash".
-2. Ve a `/juegos`, busca algo que no exista → te ofrece añadirlo → añádelo.
+1. Entra en `/login` y elige "Ash".
+2. Ve a `/games`, busca algo que no exista → te ofrece añadirlo → añádelo.
 3. Entra al detalle del juego → cambia su estado a `playing`.
-4. Ve a `/listas`, crea una lista, añade el juego a esa lista desde su detalle o desde la propia lista.
-5. Entra en `/entrar` otra vez y cambia a "Misty".
-6. Ve a `/usuarios/ash` y confirma que ves el juego de Ash en el estado correcto y en su lista — así validas la parte de "ver otros usuarios y sus listas".
+4. Ve a `/lists`, crea una lista, añade el juego a esa lista desde su detalle o desde la propia lista.
+5. Entra en `/login` otra vez y cambia a "Misty".
+6. Ve a `/users/ash` y confirma que ves el juego de Ash en el estado correcto y en su lista — así validas la parte de "ver otros usuarios y sus listas".
 
 ---
 
@@ -1193,7 +1193,7 @@ Todo en `global.css`, sin tocar las plantillas (salvo una clase `hero-bg` en la 
 }
 ```
 
-Aplica `class="hero-bg ..."` al `PixelPanel` del hero en `src/pages/index.astro`, y `card-hover` junto al resto de clases en las tarjetas de `src/pages/juegos/index.astro`, `src/components/ListCard.astro` y `src/pages/usuarios/index.astro`.
+Aplica `class="hero-bg ..."` al `PixelPanel` del hero en `src/pages/index.astro`, y `card-hover` junto al resto de clases en las tarjetas de `src/pages/games/index.astro`, `src/components/ListCard.astro` y `src/pages/users/index.astro`.
 
 Para transiciones suaves **entre páginas** (no solo dentro de una página), Astro trae de serie el componente `<ClientRouter />`, que añade un crossfade automático a toda navegación por enlaces (`<a>`), respeta `prefers-reduced-motion` sin configuración extra, y no afecta a los `<form>` de las Actions (solo intercepta clics en enlaces y navegación de historial, así que el flujo de `setStatus`/`createList`/etc. sigue haciendo una navegación normal). Se añade una vez en `src/layouts/Layout.astro`:
 
@@ -1214,7 +1214,7 @@ import { ClientRouter } from 'astro:transitions';
 
 ### Centrar el contenido verticalmente
 
-Con `output: 'server'`, páginas con poco contenido (como `/entrar`) quedaban pegadas arriba, con un hueco grande debajo. Se centra con flexbox usando márgenes automáticos — **no** con `justify-content: center` directamente, porque esa técnica recorta el contenido por arriba si en algún momento es más alto que la pantalla; con `margin: auto` los márgenes simplemente se reducen a `0` y el contenido vuelve a fluir normal desde arriba:
+Con `output: 'server'`, páginas con poco contenido (como `/login`) quedaban pegadas arriba, con un hueco grande debajo. Se centra con flexbox usando márgenes automáticos — **no** con `justify-content: center` directamente, porque esa técnica recorta el contenido por arriba si en algún momento es más alto que la pantalla; con `margin: auto` los márgenes simplemente se reducen a `0` y el contenido vuelve a fluir normal desde arriba:
 
 ```astro
 <body class="font-sans min-h-screen flex flex-col">
@@ -1233,7 +1233,7 @@ En la primera versión, `src/pages/index.astro` tenía `export const prerender =
 
 ### Vista cuadrícula / lista en el catálogo
 
-En `src/pages/juegos/index.astro`, dos botones alternan la clase del contenedor de resultados (persistiendo la elección en `localStorage`) en vez de duplicar el marcado:
+En `src/pages/games/index.astro`, dos botones alternan la clase del contenedor de resultados (persistiendo la elección en `localStorage`) en vez de duplicar el marcado:
 
 ```astro
 <div class="flex gap-1" role="group" aria-label="Vista de la lista de juegos">
@@ -1244,7 +1244,7 @@ En `src/pages/juegos/index.astro`, dos botones alternan la clase del contenedor 
 <div id="games-container" class="grid md:grid-cols-3 gap-4">
   {games.map((g) => (
     <a
-      href={`/juegos/${g.id}`}
+      href={`/games/${g.id}`}
       class="pixel-panel card-hover p-4 hover:bg-panel-light flex items-center justify-between gap-4"
     >
       <h3 class="font-pixel text-xs text-accent">{g.title}</h3>
@@ -1318,7 +1318,7 @@ const { href, variant = 'accent', type = 'submit', name, value, class: className
 
 ### Bug real encontrado: paneles con `max-w-*` pero sin `mx-auto` no quedan centrados
 
-En `src/pages/juegos/[id].astro` y `src/pages/juegos/nuevo.astro`, el `PixelPanel` tenía `class="p-6 max-w-2xl"` (o `max-w-lg`) pero sin `mx-auto`. `max-w-*` solo limita el ancho; sin un margen automático a los lados, un `<div>` de bloque sigue pegado a la izquierda del `<main>` (que ya está centrado en la página, pero es más ancho — `max-w-5xl` — que el panel interior). La regla a recordar: **todo contenedor con `max-w-*` que no deba ocupar el ancho completo necesita también `mx-auto`.**
+En `src/pages/games/[id].astro` y `src/pages/games/nuevo.astro`, el `PixelPanel` tenía `class="p-6 max-w-2xl"` (o `max-w-lg`) pero sin `mx-auto`. `max-w-*` solo limita el ancho; sin un margen automático a los lados, un `<div>` de bloque sigue pegado a la izquierda del `<main>` (que ya está centrado en la página, pero es más ancho — `max-w-5xl` — que el panel interior). La regla a recordar: **todo contenedor con `max-w-*` que no deba ocupar el ancho completo necesita también `mx-auto`.**
 
 ```astro
 <PixelPanel class="p-6 max-w-2xl mx-auto">
@@ -1362,7 +1362,7 @@ const initial = title.trim().charAt(0).toUpperCase() || '?';
 </div>
 ```
 
-En el detalle (`src/pages/juegos/[id].astro`), antes del título, con fallback a una imagen real si `game.coverUrl` existe:
+En el detalle (`src/pages/games/[id].astro`), antes del título, con fallback a una imagen real si `game.coverUrl` existe:
 
 ```astro
 {game.coverUrl ? (
@@ -1372,10 +1372,10 @@ En el detalle (`src/pages/juegos/[id].astro`), antes del título, con fallback a
 )}
 ```
 
-En el catálogo (`src/pages/juegos/index.astro`), como miniatura dentro de cada tarjeta — el resto de la tarjeta (título a la derecha, con `flex-1`) no cambia, solo se añade la miniatura delante:
+En el catálogo (`src/pages/games/index.astro`), como miniatura dentro de cada tarjeta — el resto de la tarjeta (título a la derecha, con `flex-1`) no cambia, solo se añade la miniatura delante:
 
 ```astro
-<a href={`/juegos/${g.id}`} class="pixel-panel card-hover p-4 hover:bg-panel-light flex items-center gap-4">
+<a href={`/games/${g.id}`} class="pixel-panel card-hover p-4 hover:bg-panel-light flex items-center gap-4">
   {g.coverUrl ? (
     <img src={g.coverUrl} alt="" class="w-12 h-12 shrink-0 object-cover pixel-panel" />
   ) : (
@@ -1442,7 +1442,7 @@ El resto de la app vive dentro de `<main class="max-w-5xl mx-auto ...">`, pero e
     Tu biblioteca de videojuegos, a tu manera. Guarda lo que juegas,
     lo que quieres jugar, y lo que ya terminaste.
   </p>
-  <PixelButton href="/juegos" class="px-6 py-3">VER JUEGOS</PixelButton>
+  <PixelButton href="/games" class="px-6 py-3">VER JUEGOS</PixelButton>
 </section>
 ```
 
@@ -1474,7 +1474,7 @@ Sigue respetando `prefers-reduced-motion` porque usa `animation`, cubierto por l
 
 ### Bug real encontrado: la fila de búsqueda se solapaba en móvil
 
-En `/juegos`, el buscador + botón "BUSCAR" + los dos botones de vista cuadrícula/lista intentaban caber los cuatro en una sola fila incluso en pantallas de 375px. El contenedor tenía `flex-wrap`, pero como el buscador iba dentro de su propio `<form class="flex-1 min-w-48">`, ese `min-w-48` (192px) competía con los botones de vista por el ancho disponible en vez de ceder el paso — resultado: el botón "BUSCAR" se renderizaba solapado con los botones de vista, cortado visualmente. Comprobado con Playwright midiendo anchos reales de cada elemento (no a simple vista), no era un wrap mal calculado sino un overflow silencioso.
+En `/games`, el buscador + botón "BUSCAR" + los dos botones de vista cuadrícula/lista intentaban caber los cuatro en una sola fila incluso en pantallas de 375px. El contenedor tenía `flex-wrap`, pero como el buscador iba dentro de su propio `<form class="flex-1 min-w-48">`, ese `min-w-48` (192px) competía con los botones de vista por el ancho disponible en vez de ceder el paso — resultado: el botón "BUSCAR" se renderizaba solapado con los botones de vista, cortado visualmente. Comprobado con Playwright midiendo anchos reales de cada elemento (no a simple vista), no era un wrap mal calculado sino un overflow silencioso.
 
 Arreglo: apilar en vertical en móvil y poner en fila solo a partir de `sm:`:
 
@@ -1598,7 +1598,7 @@ Primera versión del barrido con tono verde/cian (a juego con la paleta) result�
 - Sustituir `src/lib/db.ts` por una base de datos real (SQLite con `better-sqlite3`, o Turso/Postgres) si quieres concurrencia y despliegue serverless.
 - Login real con contraseña, en vez del selector de usuario.
 - Imágenes de carátula automáticas vía una API externa de videojuegos.
-- Paginación en `/juegos` cuando el catálogo crezca.
+- Paginación en `/games` cuando el catálogo crezca.
 - Extraer `GameCard` como componente si en algún momento la tarjeta de juego empieza a divergir entre páginas (hoy se mantiene inline a propósito).
 - Animar también la transición entre vista cuadrícula y lista (hoy el cambio es instantáneo; animar un reflow de `grid` a `flex` requeriría una técnica FLIP, que se dejó fuera por complejidad frente al beneficio).
 

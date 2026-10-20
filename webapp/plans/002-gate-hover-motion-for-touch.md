@@ -18,10 +18,10 @@ your finger leaves it (browsers keep `:hover` sticky on tap):
   translateY(-3px); }`
 
 Affected controls with no navigation to clear the state: the grid/list view
-toggles (`src/pages/juegos/index.astro:24-25`), every status button in
+toggles (`src/pages/games/index.astro:24-25`), every status button in
 `src/components/StatusSelector.astro:19-27`, the user buttons on
-`src/pages/entrar.astro:23`, and QUITAR/AÑADIR buttons on
-`src/pages/listas/[id].astro:36,49`.
+`src/pages/login.astro:23`, and QUITAR/AÑADIR buttons on
+`src/pages/lists/[id].astro:36,49`.
 
 Playwright's mobile emulation never surfaced this (it doesn't reproduce
 sticky `:hover`), which is why the bug survived the repo's documented
@@ -87,7 +87,7 @@ exist.
     150ms/120ms, unchanged.
   - DevTools device toolbar (pick a phone model — this switches
     `hover: none`/`pointer: coarse`): tap the ▦/☰ view toggle, a status
-    button on a game page, and a user button on `/entrar`. On finger
+    button on a game page, and a user button on `/login`. On finger
     release, each button must be **at rest** — no stuck lifted state.
   - Same device mode: press-and-hold a button — `:active` press-down must
     still fire.

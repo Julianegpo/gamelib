@@ -16,7 +16,7 @@ npm run astro ...        # Astro CLI (add, check, migrate, etc.)
 
 - **Single data layer**: All file I/O goes through `src/lib/db.ts`. Nothing else in the codebase touches filesystem directly. Replace here only to migrate to SQLite or a real API.
 - **Persistence**: Four JSON files in `data/` (`games.json`, `users.json`, `library.json`, `lists.json`). Each is an array read/written via `db.ts`. No relational joins — ID lookup by convention.
-- **Actions & sessions**: Server-side Astro Actions (in `src/actions/index.ts`) handle mutations. User "login" is just session-based selection (`/entrar` page) with no password requirement — deliberate scope decision.
+- **Actions & sessions**: Server-side Astro Actions (in `src/actions/index.ts`) handle mutations. User "login" is just session-based selection (`/login` page) with no password requirement — deliberate scope decision.
 - **Rendering**: `output: 'server'` in `astro.config.mjs` with `@astrojs/node` adapter, mode `standalone`. Pages are dynamic; building generates a Node process, not static files. Do not rely on prerendering for session-dependent pages.
 
 ## Why SSR Now (Not Architectural Necessity)
@@ -86,7 +86,7 @@ Astro Actions throw exceptions without returning full error messages to HTML pag
 
 ### 🚨 Prerendering Breaks Session Pages
 
-Pages using `Astro.session` (`/entrar`, `/usuarios/*`) must render dynamically:
+Pages using `Astro.session` (`/login`, `/users/*`) must render dynamically:
 - Never use `{ prerender: true }` on these routes (session won't exist at build time)
 - Static pages can go to SSG output — dynamic SSR during build only for mutation-sensitive pages
 
@@ -148,7 +148,7 @@ Current `data/*.json` files have no locks or concurrent write safety:
 
 ### 5. Seguridad: What Auth Strategy Fits Your Team?
 
-- ✅ Assumed: Session-based user selection on `/entrar` without passwords right now
+- ✅ Assumed: Session-based user selection on `/login` without passwords right now
 - **Question**: When adding auth layer later, which do you prefer first?
   - Simple HTTP-only session cookies (easiest to start)
   - JWT tokens (standard for microservices/inter-service auth between Astro and backend)
@@ -220,7 +220,7 @@ src/
 ├── components/             # Reusable UI parts only
 └── pages/
     ├── index.astro         # Landing page (session requires dynamic render)
-    ├── juegos/[id].astro   # Game details + add game form (emit event, not direct write)
+    ├── games/[id].astro    # Game details + add game form (emit event, not direct write)
     └── ...
 ```
 

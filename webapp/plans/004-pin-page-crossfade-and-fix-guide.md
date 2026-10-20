@@ -180,7 +180,7 @@ follows) unchanged.
   - Navigate forward (nav links) and backward (the ← button): the swap must
     finish in ~150ms with a fast start and soft landing — noticeably snappier
     than before, never sluggish at the start.
-  - Submit the search form on `/juegos`, click a status button on a game
+  - Submit the search form on `/games`, click a status button on a game
     page, and submit `ELIMINAR`'s sibling actions on a list page: each
     mutation crossfades the page the same 150ms (this is the intended,
     now-documented behavior).
@@ -195,7 +195,7 @@ follows) unchanged.
   - Rendering panel → `prefers-reduced-motion: reduce` → navigation swaps
     with no animation at all (Astro's built-in guard).
   - **Scroll observation (report only)**: after a mutation on a long page
-    (e.g. add/remove games on `/listas/[id]`), note whether scroll position
+    (e.g. add/remove games on `/lists/[id]`), note whether scroll position
     is preserved or jumps to top. Do not fix it here — record the behavior
     in the plan's PR/diff description as a potential follow-up.
 - **Done when**: all four flows (link nav, back nav, search submit, status
