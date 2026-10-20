@@ -12,14 +12,15 @@
   --color-text-dim: #a6a1d9;
 
   --color-accent: #39ff88;
+  --color-accent-soft: #2f9e63;
   --color-accent-2: #ff3fa4;
   --color-accent-3: #3ad8ff;
 
-  --color-wishlist: #8a8fff;
+  --color-wishlist: #ff3fa4;
   --color-backlog: #c084fc;
   --color-playing: #3ad8ff;
-  --color-beaten: #39ff88;
-  --color-paused: #facc15;
+  --color-beaten: #ffd23f;
+  --color-paused: #fb923c;
   --color-quit: #ff5c5c;
 }
 

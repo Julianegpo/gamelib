@@ -16,8 +16,13 @@ const STATUSES: GameStatus[] = ['wishlist', 'backlog', 'playing', 'beaten', 'pau
   <input type="hidden" name="username" value={username} />
   <input type="hidden" name="gameId" value={gameId} />
   {STATUSES.map((s) => (
-    <PixelButton name="status" value={s} variant={currentStatus === s ? 'accent' : 'neutral'}>
-      {s.toUpperCase()}
+    <PixelButton
+      name="status"
+      value={s}
+      variant={currentStatus === s ? s : 'neutral'}
+      aria-pressed={currentStatus === s ? 'true' : 'false'}
+    >
+      {s === 'wishlist' ? '♥ ' : ''}{s.toUpperCase()}
     </PixelButton>
   ))}
 </form>

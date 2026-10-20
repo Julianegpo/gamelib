@@ -1,7 +1,9 @@
 ---
+import type { GameStatus } from '../lib/db';
+
 interface Props {
   href?: string;
-  variant?: 'accent' | 'accent-2' | 'accent-3' | 'quit' | 'neutral';
+  variant?: 'accent' | 'accent-2' | 'accent-3' | 'neutral' | GameStatus;
   type?: 'button' | 'submit';
   name?: string;
   value?: string;
@@ -22,8 +24,13 @@ const VARIANT_CLASSES: Record<string, string> = {
   accent: 'bg-accent text-black',
   'accent-2': 'bg-accent-2 text-black',
   'accent-3': 'bg-accent-3 text-black',
-  quit: 'bg-quit text-black',
   neutral: 'bg-panel-light text-text',
+  wishlist: 'bg-wishlist text-black',
+  backlog: 'bg-backlog text-black',
+  playing: 'bg-playing text-black',
+  beaten: 'bg-beaten text-black',
+  paused: 'bg-paused text-black',
+  quit: 'bg-quit text-black',
 };
 ---
 {href ? (
