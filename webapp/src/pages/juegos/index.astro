@@ -35,35 +35,39 @@ const games = await searchGames(q);
     </PixelPanel>
   )}
 
-  <div id="games-container" class="grid md:grid-cols-3 gap-4">
-    {games.map((g) => (
-      <a
-        href={`/juegos/${g.id}`}
-        class="pixel-panel card-hover p-4 hover:bg-panel-light flex items-center gap-4"
-      >
-        {g.coverUrl ? (
-          <img src={g.coverUrl} alt="" class="w-12 h-12 shrink-0 object-cover pixel-panel" />
-        ) : (
-          <CoverPlaceholder title={g.title} class="w-12 h-12 shrink-0 text-lg" />
-        )}
-        <div class="flex items-center justify-between flex-1 gap-4">
-          <h3 class="font-pixel text-xs text-accent">{g.title}</h3>
-          <p class="text-text-dim text-sm whitespace-nowrap">{g.platform} {g.year ? `· ${g.year}` : ''}</p>
-        </div>
-      </a>
-    ))}
+  <div class="games-scroll pr-2 pb-1">
+    <div id="games-container" class="grid md:grid-cols-3 gap-4">
+      {games.map((g) => (
+        <a
+          href={`/juegos/${g.id}`}
+          class="pixel-panel card-hover p-4 hover:bg-panel-light flex items-center gap-4"
+        >
+          {g.coverUrl ? (
+            <img src={g.coverUrl} alt="" class="w-12 h-12 shrink-0 object-cover pixel-panel" />
+          ) : (
+            <CoverPlaceholder title={g.title} class="w-12 h-12 shrink-0 text-lg" />
+          )}
+          <div class="flex items-center justify-between flex-1 gap-4">
+            <h3 class="font-pixel text-xs text-accent">{g.title}</h3>
+            <p class="text-text-dim text-sm whitespace-nowrap">{g.platform} {g.year ? `· ${g.year}` : ''}</p>
+          </div>
+        </a>
+      ))}
+    </div>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center mt-8">
-    <div class="bg-accent text-black p-5 rounded-lg shadow-[6px_6px_0_0#000]">
-      <h3 class="font-pixel text-sm uppercase mb-3">¿Falta un juego aquí?</h3>
-      <p class="text-base text-black/80 mb-4 leading-relaxed">¡Lo agregamos si lo necesitas, es tu librería!</p>
-      <PixelButton href="/juegos/nuevo" variant="accent-2" class="w-full py-3 px-4">
-        Solicitar añadirlo 👆
-      </PixelButton>
+  <div class="mt-16 pt-8 border-t-4 border-border flex flex-col items-center gap-4">
+    <div class="w-full max-w-md pixel-panel text-text p-5 border-accent!">
+      <h3 class="font-pixel text-sm uppercase mb-3 text-center text-accent">¿Falta un juego aquí?</h3>
+      <p class="text-base text-text-dim mb-4 leading-relaxed text-center">¡Lo agregamos si lo necesitas, es tu librería!</p>
+      <div class="flex justify-center">
+        <PixelButton href="/juegos/nuevo" variant="accent-2" class="py-3 px-6">
+          Solicitar añadirlo 👆
+        </PixelButton>
+      </div>
     </div>
     {games.length === 0 && (
-      <div class="p-5 bg-panel-light rounded-lg border-2 border-border flex items-center gap-4">
+      <div class="w-full max-w-md p-5 bg-panel-light rounded-lg border-2 border-border flex items-center gap-4">
         <span class="text-xl">📦</span>
         <div class="flex-1">
           <h3 class="font-pixel text-xs uppercase mb-2">Nada encontrado en la librería</h3>
