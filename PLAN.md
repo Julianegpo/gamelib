@@ -73,7 +73,7 @@ Add the `GameStatus` import. Re-run `mvn test` → suite green.
 
 ### 1.2 Broken year input (webapp)
 
-`webapp/src/pages/juegos/nuevo.astro`:
+`webapp/src/pages/games/nuevo.astro`:
 
 - The year field is `<input type="date">` but the action validates
   `z.coerce.number()` — a date string coerces to `NaN` → every submit with a
@@ -261,7 +261,7 @@ UX (a toast system is out of scope).
 1. `docker compose up -d` + `mvn spring-boot:run` + `npm run dev`.
 2. Full user flow on JSON-era muscle memory: entrar como Ash → cambiar estado
    → crear lista → añadir juego a la lista → borrar lista → entrar como Misty
-   → ver `/usuarios/ash` refleja los cambios.
+   → ver `/users/ash` refleja los cambios.
 3. Confirm every mutation lands in Postgres (`docker compose exec postgres
    psql ...`) and that consumer log lines appear in the server console (Kafka
    events firing).
@@ -294,13 +294,13 @@ export default defineConfig({
     i18n({
       locales: { es: 'es-ES', en: 'en-US' },
       defaultLocale: 'es',
-      redirectDefaultLocale: true, // /es/juegos → /juegos (canonical root)
+      redirectDefaultLocale: true, // /es/games → /games (canonical root)
     }),
   ],
 });
 ```
 
-Resulting URLs: Spanish at root (`/juegos`), English prefixed (`/en/juegos`).
+Resulting URLs: Spanish at root (`/games`), English prefixed (`/en/games`).
 `/es/*` redirects to the root equivalent — one canonical URL per page per
 locale. All current pages are `.astro` files, which is the only page type
 astro-i18n-aut translates — no exclusions needed.
@@ -337,7 +337,7 @@ per-locale content; out of scope.)
 - `<html lang={locale}>` in `Layout.astro` (currently hardcoded `lang="es"`).
 - Language switcher in the header: `ES | EN` links built with
   `getRelativeLocaleUrl`-style helpers — same path, other locale
-  (`/juegos` ↔ `/en/juegos`), preserving the current route.
+  (`/games` ↔ `/en/games`), preserving the current route.
 - Components that render strings (`StatusBadge`, `StatusSelector`,
   `ListCard`, `CoverPlaceholder`'s aria-label) receive the translated label or
   load the dict themselves — prefer passing the label as a prop from the page
@@ -351,7 +351,7 @@ per-locale content; out of scope.)
 - Scripts (`back-btn`, games view toggle) are locale-independent — no changes,
   but re-test them under `/en/*` since they re-bind on `astro:page-load`.
 - Forms POST to Actions with hidden inputs — locale-neutral, but verify the
-  redirect after `addGame` (`/juegos/{slug}`) lands on the **root-locale**
+  redirect after `addGame` (`/games/{slug}`) lands on the **root-locale**
   route, which is valid for both locales.
 - `localStorage` key `gamelib-games-view` stays shared across locales
   (deliberate).
