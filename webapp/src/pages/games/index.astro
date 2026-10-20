@@ -29,7 +29,7 @@ const games = await searchGames(q);
   {games.length === 0 && (
     <PixelPanel class="p-6 text-center">
       <p class="text-text-dim mb-4">No hay resultados para "{q}".</p>
-      <PixelButton href={`/juegos/nuevo?title=${encodeURIComponent(q)}`} variant="accent-2">
+      <PixelButton href={`/games/nuevo?title=${encodeURIComponent(q)}`} variant="accent-2">
         AÑADIR "{q || 'NUEVO JUEGO'}"
       </PixelButton>
     </PixelPanel>
@@ -39,7 +39,7 @@ const games = await searchGames(q);
     <div id="games-container" class="grid md:grid-cols-3 gap-4">
       {games.map((g) => (
         <a
-          href={`/juegos/${g.id}`}
+          href={`/games/${g.id}`}
           class="pixel-panel card-hover p-4 hover:bg-panel-light flex items-center gap-4"
         >
           {g.coverUrl ? (
@@ -61,7 +61,7 @@ const games = await searchGames(q);
       <h3 class="font-pixel text-sm uppercase mb-3 text-center text-accent">¿Falta un juego aquí?</h3>
       <p class="text-base text-text-dim mb-4 leading-relaxed text-center">¡Lo agregamos si lo necesitas, es tu librería!</p>
       <div class="flex justify-center">
-        <PixelButton href="/juegos/nuevo" variant="accent-2" class="py-3 px-6">
+        <PixelButton href="/games/nuevo" variant="accent-2" class="py-3 px-6">
           Solicitar añadirlo 👆
         </PixelButton>
       </div>

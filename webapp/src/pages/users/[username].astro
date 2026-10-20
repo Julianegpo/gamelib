@@ -7,7 +7,7 @@ import { getUser, getLibraryForUser, getListsForUser, getGames } from '../../lib
 
 const { username } = Astro.params;
 const user = await getUser(username!);
-if (!user) return Astro.redirect('/usuarios');
+if (!user) return Astro.redirect('/users');
 
 const [library, lists, games] = await Promise.all([
   getLibraryForUser(username!),
@@ -33,7 +33,7 @@ const STATUSES = ['wishlist', 'backlog', 'playing', 'beaten', 'paused', 'quit'] 
           <ul class="text-sm text-text-dim">
             {entries.map((e) => {
               const g = gameById.get(e.gameId);
-              return g && <li><a href={`/juegos/${g.id}`} class="hover:text-accent">{g.title}</a></li>;
+              return g && <li><a href={`/games/${g.id}`} class="hover:text-accent">{g.title}</a></li>;
             })}
           </ul>
         </PixelPanel>

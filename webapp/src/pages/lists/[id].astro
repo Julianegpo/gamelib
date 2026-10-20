@@ -7,7 +7,7 @@ import { getList, getGames } from '../../lib/db';
 
 const { id } = Astro.params;
 const list = await getList(id!);
-if (!list) return Astro.redirect('/listas');
+if (!list) return Astro.redirect('/lists');
 
 const allGames = await getGames();
 const gamesInList = allGames.filter((g) => list.gameIds.includes(g.id));
@@ -32,7 +32,7 @@ const gamesNotInList = allGames.filter((g) => !list.gameIds.includes(g.id));
           class="pixel-panel p-3 flex justify-between items-center mb-2">
           <input type="hidden" name="listId" value={list.id} />
           <input type="hidden" name="gameId" value={g.id} />
-          <a href={`/juegos/${g.id}`} class="hover:text-accent">{g.title}</a>
+          <a href={`/games/${g.id}`} class="hover:text-accent">{g.title}</a>
           <PixelButton type="submit" variant="quit" class="px-2 py-1">QUITAR</PixelButton>
         </form>
       ))}

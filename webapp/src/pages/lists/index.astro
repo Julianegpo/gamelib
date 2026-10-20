@@ -7,7 +7,7 @@ import { actions } from 'astro:actions';
 import { getListsForUser } from '../../lib/db';
 
 const username = Astro.session ? await Astro.session.get('username') : null;
-if (!username) return Astro.redirect('/entrar');
+if (!username) return Astro.redirect('/login');
 
 const lists = await getListsForUser(username);
 ---

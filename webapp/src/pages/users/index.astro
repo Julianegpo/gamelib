@@ -7,7 +7,7 @@ const users = await getUsers();
 <Layout title="Usuarios">
   <div class="grid md:grid-cols-3 gap-4">
     {users.map((u) => (
-      <a href={`/usuarios/${u.username}`} class="pixel-panel card-hover p-4 hover:bg-panel-light block">
+      <a href={`/users/${u.username}`} class="pixel-panel card-hover p-4 hover:bg-panel-light block">
         <h3 class="font-pixel text-xs text-accent">{u.displayName}</h3>
       </a>
     ))}
